@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+ /* CSS for Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    padding: 10px 20px;
+}
+
+.navbar button {
+    color: white;
+    background-color: black;
+    text-decoration: none;
+    padding: 10px;
+}
+
+.navbar button:hover {
+    background-color: #555;
+}
+
+/* CSS for Image Grid */
+.image-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.image-container {
+    position: relative;
+    width: 30%; /* Adjust as needed */
+    margin-bottom: 20px;
+}
+
+.grid-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.image-popup {
+    display: none;
+    position: absolute;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(7px);
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 999; /* Ensure the popup stays on top */
+}
+
+.image-popup img{
+    width: 100%;
+    height: 50%;
+}
+
+.image-container:hover .image-popup {
+    display: block;
+}
+
+/* Media Query for Mobile Devices */
+@media screen and (max-width: 768px) {
+    .image-container {
+        width: 50%; /* Adjust as needed */
+
+    }
+    
+}
+
+.register-btn {
+    display: block;
+    margin-top: 10px; /* Adjust spacing */
+    padding: 8px 16px;
+    background-color: #007bff; /* Button color */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.register-btn:hover {
+    background-color: #0056b3; /* Hover color */
+}
+
+</style>
+<body>
+    <nav class="navbar">
+        <button id="back-btn">Home</button>
+    </nav>
+
+    <div class="image-grid">
+        <!-- Image 1 -->
+        <div class="image-container">
+            <img src="/static/ar.jpg" alt="Image 1" class="grid-image">
+            <div class="image-popup">
+                <h3>dancing</h3>
+                <img src="/static/ar.jpg" alt="img1">
+                <p>here you can can show your talent in dance if you are interested</p>
+                <p>click on the registration button below</p>
+                <button class="register-btn">Register</button>
+            </div>
+        </div>
+        <div class="image-container">
+            <img src="/static/drive.jpg" alt="Image 1" class="grid-image">
+            <div class="image-popup">
+                <p>Description of Image 1</p>
+                <button class="register-btn">Register</button>
+            </div>
+        </div>
+        <div class="image-container">
+            <img src="/static/exp.jpg" alt="Image 1" class="grid-image">
+            <div class="image-popup">
+                <p>Description of Image 1</p>
+                <button class="register-btn">Register</button>
+            </div>
+        </div>
+        <div class="image-container">
+            <img src="/static/zub.jpg" alt="Image 1" class="grid-image">
+            <div class="image-popup">
+                <p>Description of Image 1</p>
+                <button class="register-btn">Register</button>
+            </div>
+        </div>
+        <!-- Repeat for images 2 to 6 -->
+    </div>
+
+    <script>
+       // JavaScript for Image Popup
+       document.addEventListener("DOMContentLoaded", function() {
+    const imageContainers = document.querySelectorAll(".image-container");
+
+    imageContainers.forEach(container => {
+        const image = container.querySelector(".grid-image");
+        const popup = container.querySelector(".image-popup");
+
+        container.addEventListener("mouseenter", function() {
+            // Calculate the position of the popup relative to the image
+            const imageRect = image.getBoundingClientRect();
+            const popupWidth = popup.offsetWidth;
+            const popupHeight = popup.offsetHeight;
+            const popupLeft = (imageRect.width - popupWidth) / 2;
+            const popupTop = (imageRect.height - popupHeight) / 2;
+
+            // Set the position of the popup
+            popup.style.left = popupLeft + "px";
+            popup.style.top = popupTop + "px";
+
+            // Show the popup
+            popup.style.display = "block";
+        });
+
+        container.addEventListener("mouseleave", function(event) {
+            // Check if the mouse is leaving the image or the popup
+            if (!container.contains(event.relatedTarget)) {
+                popup.style.display = "none";
+            }
+        });
+    });
+});
+// JavaScript for Back Button
+const backButton = document.getElementById('back-btn');
+backButton.addEventListener('click', () => {
+    window.history.back();
+});
+
+// JavaScript for Image Popup on Mobile Devices with Close Functionality
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+const images = document.querySelectorAll('.grid-image');
+images.forEach(image => {
+    image.addEventListener('click', (event) => {
+        if (isMobile) {
+            const popup = image.nextElementSibling;
+            popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+            event.stopPropagation(); // Prevent event propagation to document body
+        }
+    });
+});
+
+// Close Popup Window when Clicking Outside
+document.body.addEventListener('click', (event) => {
+    if (isMobile) {
+        const popups = document.querySelectorAll('.image-popup');
+        popups.forEach(popup => {
+            if (!popup.contains(event.target)) {
+                popup.style.display = 'none';
+            }
+        });
+    }
+});
+
+// JavaScript for Registration Button
+const registerButtons = document.querySelectorAll('.register-btn');
+
+registerButtons.forEach((button, index) => {
+    button.addEventListener('click', () => {
+        const registrationFormURL = `registration_form_${index + 1}.html`;
+        window.location.href = registrationFormURL;
+    });
+});
+
+
+    </script>
+</body>
+</html>
